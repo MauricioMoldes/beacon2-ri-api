@@ -8,6 +8,31 @@ networks:
 services:
 
   ###########################################
+  # beacon-ri-tools
+  ###########################################
+
+  beacon-ri-tools:
+    image: beacon2ri/beacon_reference_implementation:v2.0.0
+    hostname: beacon-ri-tools
+    networks:
+      - beacon-priv
+    volumes:
+    - ./my_data:/usr/share/beacon-ri/beacon2-ri-tools/my_data
+    command: bash /usr/share/beacon-ri/beacon2-ri-tools/BEACON/bin/deploy_external_tools.sh
+
+  ###########################################
+  # training-ui
+  ###########################################
+
+  training-ui:
+    image: beacon2ri/training_ui:v0.1
+    hostname: beacon_training_ui    
+    ports:
+      - 8080:8080
+    networks:
+      - beacon-priv
+
+  ###########################################
   # MongoDB Database
   ###########################################
 
@@ -22,8 +47,8 @@ services:
       MONGO_INITDB_DATABASE: beacon
     volumes:
       - ./mongo-init/:/docker-entrypoint-initdb.d/:ro
-    # networks:
-    #   - beacon-priv
+    networks:
+      - beacon-priv
 
   mongo-express:
     image: mongo-express
@@ -34,8 +59,8 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-    # networks:
-    #   - beacon-priv
+    networks:
+      - beacon-priv
 
   ###########################################
   # Beacon
@@ -55,9 +80,9 @@ services:
       - ./ontologies:/beacon/ontologies
     ports:
       - "5050:5050"
-    # networks:
-    #   - beacon-priv
-    #   - pub
+    networks:
+      - beacon-priv
+      - pub
     working_dir: '/beacon'
     entrypoint: ['python','-m','beacon']
     # entrypoint: ['/bin/sleep','100000000']
@@ -75,9 +100,9 @@ services:
       - ./logger.yml:/beacon/logger.yml
     ports:
       - "5051:5051"
-    # networks:
-    #   - beacon-priv
-    #   - pub
+    networks:
+      - beacon-priv
+      - pub
     #entrypoint: ['/bin/sleep','100000000']
     working_dir: '/beacon'
     entrypoint: ['python','-m', 'permissions']
@@ -110,9 +135,9 @@ services:
       - ./beacon-realm.json:/tmp/beacon-realm.json
     ports:
       - "8080:8080"
-    # networks:
-    #   - pub
-    #   - idp-priv
+    networks:
+      - pub
+      - idp-priv 
     depends_on:
       - idp-db
 
@@ -124,5 +149,5 @@ services:
       - POSTGRES_DB=keycloak
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=secret
-    # networks:
-    #   - idp-priv
+    networks:
+      - idp-priv 

@@ -74,7 +74,7 @@ beacon_handovers = [
 #
 # Database connection
 #
-database_host = '127.0.0.1'
+database_host = 'mongo'
 database_port = 27017
 database_user = 'root'
 database_password = 'example'

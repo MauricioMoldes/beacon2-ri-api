@@ -16,9 +16,10 @@ services:
     hostname: beacon-ri-tools
     networks:
       - beacon-priv
-    volumes:
-    - ./my_data:/usr/share/beacon-ri/beacon2-ri-tools/my_data
+    #volumes:
+    #- ./my_data:/usr/share/beacon-ri/beacon2-ri-tools/my_data
     command: bash /usr/share/beacon-ri/beacon2-ri-tools/BEACON/bin/deploy_external_tools.sh
+    tty: true
 
   ###########################################
   # training-ui

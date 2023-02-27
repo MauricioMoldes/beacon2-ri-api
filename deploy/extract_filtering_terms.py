@@ -1,7 +1,8 @@
+import re
+import sys
 import os.path
 import urllib.request
 from typing import List, Dict, Optional
-import re
 from urllib.error import HTTPError
 
 import requests
@@ -165,6 +166,8 @@ def get_properties_of_document(document, prefix="") -> List[str]:
                 properties.append(prefix + '.' + key if prefix else key)
             elif isinstance(value, int):
                 properties.append(prefix + '.' + key if prefix else key)
+            elif isinstance(value, float):
+                properties.append(prefix + '.' + key if prefix else key)                
             elif isinstance(value, str):
                 properties.append(prefix + '.' + key if prefix else key)
             elif isinstance(value, list):
@@ -173,10 +176,10 @@ def get_properties_of_document(document, prefix="") -> List[str]:
                 properties += get_properties_of_document(value, prefix + '.' + key if prefix else key)
             else:
                 print('Unknown type:', value, ' (', type(value), ')')
-                exit(0)
+                sys.exit(0)
     else:
         print('Unknown type2:', document, ' (', type(document), ')')
-        exit(0)
+        sys.exit(0)
     return properties
 
 
@@ -210,6 +213,6 @@ def insert_all_alphanumeric_terms_used():
         if len(terms) > 0:
             client.beacon.filtering_terms.insert_many(terms)
 
-
-insert_all_ontology_terms_used()
-insert_all_alphanumeric_terms_used()
+if __name__=='__main__':
+    insert_all_ontology_terms_used()
+    insert_all_alphanumeric_terms_used()
